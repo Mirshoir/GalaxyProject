@@ -1,3 +1,4 @@
+#clustering.py
 """
 Clustering in distance space.
 Uses k-medoids algorithm which works directly with distance matrices.
