@@ -1,0 +1,37 @@
+Compression Module Overview
+
+The purpose of compression.py is to turn galaxy images into numerical values that describe how complex their structure is. This file does not classify galaxies or train any machine learning models. Instead, it provides a clean and consistent way to measure image complexity, which is later used to compare and classify galaxies.
+
+The galaxy images in the dataset are stored as JPEG files, but JPEG is used only as an input container. Because JPEG images are already compressed, compressing the JPEG bytes directly would mostly reflect camera and encoding artifacts rather than galaxy structure. For this reason, every image is first fully decoded into pixel space, and all further processing is done on the raw pixel values.
+
+To ensure that all images are comparable, each image is converted to grayscale, resized to a fixed resolution of 256 by 256 pixels, and normalized so that pixel values lie between 0 and 255. This removes differences caused by color, resolution, or exposure and ensures that every image has the same basic format before any analysis is performed. This standardized representation is referred to as the canonical image, and it is the only image representation used in the project.
+
+After normalization, optional preprocessing steps can be applied. Gaussian smoothing can be used to reduce noise or to emphasize larger-scale galaxy structures, such as bulges, while smaller smoothing values preserve finer details like spiral arms. Brightness-based thresholding can also be applied as an experimental step, where the dimmest pixels are set to zero to test whether the most important morphological information lies in the brightest regions of a galaxy. These steps are optional and controlled, and they do not change the underlying definition of the canonical image.
+
+Once the canonical image is produced, it is compressed using lossless compression methods. The primary method is PNG compression, which is lossless and image-aware. The size of the compressed PNG file, measured in bytes, is used as a proxy for the image’s structural complexity. Images with more structure tend to compress less efficiently and therefore produce larger compressed sizes, while simpler images produce smaller sizes. A second compression method based on raw bytes and zlib is included as a baseline for comparison.
+
+On top of these compression methods, the module defines functions that measure image complexity and similarity. The function C(x) returns the compressed size of a single image and represents its complexity. The function C(xy) returns the compressed size of two images concatenated together and represents their joint complexity. Using these values, the module also computes the Normalized Compression Distance, which produces a single number describing how similar two galaxy images are. Smaller values indicate higher similarity, while larger values indicate greater difference.
+
+All functions in compression.py are deterministic and side-effect free. The file contains no user interface code, no dataset loops, and no classification logic. Its sole responsibility is to define how images are standardized, compressed, and compared. Because many later stages of the project depend on this module, it is considered complete and should not be modified further.
+
+This compression module serves as the foundation for the rest of the project, enabling distance-based comparison and classification of galaxy morphologies in a consistent and reproducible way.
+
+
+
+
+
+Nearest Neighbors Module Overview
+
+The purpose of nearest_neighbors.py is to measure how similar galaxy images are to each other using the compression-based distance defined in compression.py. This file does not deal with raw images, preprocessing, or compression itself. Instead, it builds on top of the compression module and applies the Normalized Compression Distance (NCD) to groups of images.
+
+At this stage of the project, every galaxy image can already be converted into a canonical grayscale representation and compressed in a consistent way. Using these compressed sizes, nearest_neighbors.py focuses on comparing images pairwise. The central idea is that galaxies with similar structure should have smaller NCD values, while galaxies with very different morphology should have larger NCD values.
+
+The module provides functionality to compute distances between many images at once. Given a list of image paths, it can construct a full NCD distance matrix, where each entry represents the distance between two images. This matrix is symmetric, and the distance of an image to itself is always zero. The distance matrix is a key intermediate result and is later used by classification algorithms.
+
+In addition to computing full distance matrices, the module also supports nearest-neighbor queries. For a chosen galaxy image, it can compute the NCD distance to all other images and return the closest ones. This allows the project to answer questions such as which galaxies are most similar to a given query galaxy under the compression-based distance.
+
+Importantly, this file contains no classification logic. It does not assign labels, train models, or evaluate accuracy. Its responsibility is strictly limited to computing distances and identifying nearest neighbors using NCD. By keeping this functionality separate, the project remains modular and easier to understand, test, and extend.
+
+The output of nearest_neighbors.py is used directly by later stages of the project, such as k-nearest neighbors classification and support vector machines. Because it relies entirely on the already finalized compression module, it should not modify image processing or compression behavior. Instead, it acts as the bridge between low-level compression measurements and higher-level machine learning methods.
+
+In short, nearest_neighbors.py translates compression-based similarity into usable distance information, forming the foundation for all subsequent classification steps in the project.
