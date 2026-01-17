@@ -7,4 +7,4 @@ scipy>=1.10.0       # Distance metrics, clustering
 scikit-learn>=1.3.0 # Optional: k-means implementation
 matplotlib>=3.7.0   # Visualization
 tqdm>=4.65.0        # Progress bars for large computations
-cv2
+opencv-python-headless>=4.9.0
