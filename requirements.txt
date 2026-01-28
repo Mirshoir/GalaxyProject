@@ -1,10 +1,11 @@
 plumbum
 plotly
 streamlit
-Pillow>=10.0.0      # Image processing
-numpy>=1.24.0       # Numerical operations
-scipy>=1.10.0       # Distance metrics, clustering
-scikit-learn>=1.3.0 # Optional: k-means implementation
-matplotlib>=3.7.0   # Visualization
-tqdm>=4.65.0        # Progress bars for large computations
+Pillow>=10.0.0
+numpy>=1.24.0
+scipy>=1.10.0
+scikit-learn>=1.3.0
+scikit-learn-extra>=0.3.0
+matplotlib>=3.7.0
+tqdm>=4.65.0
 opencv-python-headless>=4.9.0
