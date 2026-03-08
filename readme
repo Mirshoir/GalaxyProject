@@ -2,7 +2,7 @@ Running guide:
 
 python galaxy_cli.py scan /path/to/images
 python galaxy_cli.py preprocess --size 128
-python galaxy_cli.py distances --n 500 --algo zlib
+python galaxy_cli.py distances --n 500 --algo lzma
 python galaxy_cli.py rms --k-min 2 --k-max 12
 python galaxy_cli.py cluster --k 5
 python galaxy_cli.py neighbors --query 3 --k 10
@@ -15,7 +15,7 @@ If you want to run whole dataset use this command:
 python galaxy_cli.py scan /path/to/your/galaxy/images
 
 # 2. Compute distances for ALL images (no --n limit = uses all scanned)
-python galaxy_cli.py distances --algo zlib
+python galaxy_cli.py distances --algo lzma
 
 # 3. Find optimal k (elbow diagram saved as PNG)
 python galaxy_cli.py rms --k-min 2 --k-max 12 --runs 3
